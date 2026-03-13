@@ -65,7 +65,7 @@ def launch_chrome():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=options)
     driver.get("https://projectmanagement-8d5c4.web.app/")
     #driver.maximize_window()
-    CTkMessagebox(title="Info", message="Chrome opened. Please Log in -> Select the Project -> Click on Drawings Tab. Check Instructions for more info")
+    CTkMessagebox(title="Info", message="ESMT Launched. Please Log in -> Select the Project -> Click on Drawings Tab. Check Instructions for more info")
     time.sleep(2)  # Wait a bit for Chrome to start
 
 # Browse file logic
@@ -90,11 +90,11 @@ def show_instructions():
     instructions_window.title("Instructions")
     instructions_window.geometry("740x600")
     instructions_text = (
-        "Auto Form Filler v1.0.5-beta\n\n"
+        "ESMT - Auto Form Filler v1.0.5-beta\n\n"
         "Pre-run check: Select the correct project and ensure all elements are present.\n"
         "If any are missing, create them before running the automation — otherwise, the 'Elements' section will appear empty.\n\n"
         "1. Select the desired function from the dropdown\n"
-        "2. Click 'Open Chrome' and log in to the website\n"
+        "2. Click 'Launch ESMT' and log in to the website\n"
         "3. Select the project and go to the Drawings tab\n"
         "4. Use 'Browse' to select your Excel file\n"
         "5. Enter the sheet name, starting and ending row number\n"
@@ -279,36 +279,36 @@ def start_adding_dwg(data):
         print (element[i], " | ")
         sleep(0.5)
         # fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div/form/div[1]/ng-autocomplete/div[1]/div[1]/input', element[i])
-        select_ng_autocomplete('/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div/form/div[1]/ng-autocomplete/div[1]/div[1]/input', element[i], wait)
+        select_ng_autocomplete('/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div[2]/form/div[1]/ng-autocomplete/div/div[1]/input', element[i], wait)
 
         #Sheet Size - Dropdown
         print (sh_size[i], " | ")
         sleep(0.5)
-        Select(driver.find_element(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div/form/div[2]/select')).select_by_visible_text(sh_size[i])
+        Select(driver.find_element(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div[2]/form/div[2]/select')).select_by_visible_text(sh_size[i])
         sleep(0.5)
 
         #Scheduled Date
         print (st_date[i], " | ")
-        fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div/form/div[3]/input', st_date[i])
+        fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div[2]/form/div[3]/input', st_date[i])
 
         #Drawing name/number
         print (dwg_name[i], " | ")
-        fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div/form/div[4]/input', dwg_name[i])
+        fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div[2]/form/div[4]/input', dwg_name[i])
 
         #Drawing Description
         print (dwg_desc[i], " | ")
-        fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div/form/div[5]/input', dwg_desc[i])
+        fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div[2]/form/div[5]/input', dwg_desc[i])
         sleep(0.5)
         
         #Revision
         print (revision[i], " | ")
-        fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div/form/div[6]/input', revision[i])
+        fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div[2]/form/div[6]/input', revision[i])
 
         #Hotkey to wait before proceeding to Submit
         wait_for_key()
 
         #Click - Submit
-        elem2 = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div/div/button[2]')))
+        elem2 = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div[2]/div/button[2]')))
         elem2.click()
         sleep(0.5)
 
@@ -341,38 +341,27 @@ def start_active_to_completed(data):
         elem2 = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div/div[3]/button[1]')))
         elem2.click()
 
-        
-        # Click Completed Button
-        elems = driver.find_elements(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div/div[5]/div[9]/button[5]')
+        # Click 'Set Drawings as Completed' Button
+        elems = driver.find_elements(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div/div[5]/div[11]/button[6]')
         if elems:
             elem2 = elems[0]
             elem2.click()
         else:
             missing_dwg.append(dwg_no[i])
             continue  # Skip to the next drawing if not found
-        #elem2 = WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div/div[5]/div[9]/button[5]')))
-        #elem2.click()
 
         #Scheduled Date
         print (dwg_date[i], " | ")
-        fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div/div/input', dwg_date[i])
+        fill_input(By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div[2]/input', dwg_date[i])
 
-        #Click - Update Button
-        elem2 = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div/div/div/button[1]')))
+        #Click - Save Button
+        elem2 = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/app-root/div/app-project-details/div/div[3]/app-drawings/div[2]/div[2]/div/div/div[3]/button[1]')))
         elem2.click()
         sleep(0.5)
 
         #Hotkey to wait before proceeding to Confirm Update
         wait_for_key()
         sleep(1)
-
-        #Click - Yes, update it! Button Damn it! This click doesn't work at all!
-        '''
-        elem3 = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.swal2-confirm.swal2-styled.swal2-default-outline')))
-        driver.execute_script("arguments[0].click();", elem3)
-        sleep(0.5)
-        print("The damn button has been clicked")
-        '''
 
     # Display missing drawings if any
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -393,7 +382,7 @@ def start_button_clicked():
         CTkMessagebox(title="Success", message="Automation completed successfully!", icon="check")
     except Exception as e:
         if isinstance(e, NameError):
-            CTkMessagebox(title="Error", message="Please open Chrome first.", icon="cancel")
+            CTkMessagebox(title="Error", message="Please open ESMT first.", icon="cancel")
         else:
             CTkMessagebox(title="Error", message=f"An error occurred: {e}", icon="cancel")
 
@@ -464,7 +453,7 @@ vcmd = (frame_2.register(only_integers), '%P')
 ctk.CTkEntry(frame_2, textvariable=ending_row_var, validate='key', validatecommand=vcmd, width=150).grid(row=4, column=1, sticky="w", padx=10, pady=10)
 
 #Chrome Button
-ctk.CTkButton(frame_2, text="Open Chrome", command=launch_chrome, border_color="#d3eef7", border_width=2).grid(row=5, column=0, padx=(30,20), pady=(30,10))
+ctk.CTkButton(frame_2, text="Launch ESMT", command=launch_chrome, border_color="#d3eef7", border_width=2).grid(row=5, column=0, padx=(30,20), pady=(30,10))
 
 # Start Automation Button
 ctk.CTkButton(frame_2, text="Start Automation", command=lambda: start_button_clicked(), fg_color="#0a6488", border_color="#d3eef7", border_width=2).grid(row=5, column=1, padx=(30,20), pady=(30,10))
