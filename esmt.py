@@ -190,23 +190,34 @@ def convert_excel(file_path):
 
     # Store and reformat
     print(f"File Path: '{file_path}'")
-    df = pd.read_csv(file_path, encoding='utf-8', header=2, sep=r'[\t,]', engine='python')
+    df = pd.read_csv(file_path, encoding='utf-8', header=2, skiprows=[0, 1], sep=r'[\t,]', engine='python')
     print("Reached the CSV file reading part")
     print(df.columns)
     
+    # Drop Columns
+    # cols_to_drop = [2,3,4,5,6,9,10]
+    # df = df.drop(df.columns[cols_to_drop], axis=1)
+
+    # Defining column indexes to keep (0-based indexing)
+    df = df.iloc[:, [0,1,7,8]]  # Keep only the columns we need
+    df.columns = ['Employee', 'Date', 'Active time', 'Idle time']
+
+    print("Reached the date conversion part")
     # Convert and format date column
     df['Date'] = pd.to_datetime(df['Date'], format="%d/%m/%Y", errors='coerce')
-
+    print(df['Date'])
+    
+    print("Reached the time conversion part")
     # Convert and format time columns
     df['Active time'] = pd.to_timedelta(df['Active time'])
     df['Idle time'] = pd.to_timedelta(df['Idle time'])
+    print(df['Active time'])
+    print(df['Idle time'])
     
     df['Active time'] = df['Active time'].apply(timedelta_to_excel_time)
     df['Idle time'] = df['Idle time'].apply(timedelta_to_excel_time)
-
-    # Drop Columns
-    cols_to_drop = [2,3,4,5,6,9,10]
-    df = df.drop(df.columns[cols_to_drop], axis=1)
+    print(df['Active time'])
+    print(df['Idle time'])
 
     # Write to a new Excel file
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -217,6 +228,7 @@ def convert_excel(file_path):
     sheet = workbook.active
 
     headers = [cell.value for cell in sheet[1]]
+    employee_col = headers.index("Employee") + 1
     date_col = headers.index("Date") + 1
     active_time_col = headers.index("Active time") + 1
     idle_time_col = headers.index("Idle time") + 1
@@ -224,8 +236,8 @@ def convert_excel(file_path):
     # Applying date and time format
     for row in sheet.iter_rows(min_row=2):
         row[date_col - 1].number_format = "dd/mmm/yyyy"
-        row[active_time_col - 1].number_format = "h:mm"
-        row[idle_time_col - 1].number_format = "h:mm"
+        row[active_time_col - 1].number_format = "h:mm:ss"
+        row[idle_time_col - 1].number_format = "h:mm:ss"
 
     workbook.save(f"worktime_converted_{timestamp}.xlsx")
 
