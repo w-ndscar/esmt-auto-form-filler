@@ -205,19 +205,14 @@ def convert_excel(file_path):
     print("Reached the date conversion part")
     # Convert and format date column
     df['Date'] = pd.to_datetime(df['Date'], format="%d/%m/%Y", errors='coerce')
-    print(df['Date'])
     
     print("Reached the time conversion part")
     # Convert and format time columns
     df['Active time'] = pd.to_timedelta(df['Active time'])
     df['Idle time'] = pd.to_timedelta(df['Idle time'])
-    print(df['Active time'])
-    print(df['Idle time'])
     
     df['Active time'] = df['Active time'].apply(timedelta_to_excel_time)
     df['Idle time'] = df['Idle time'].apply(timedelta_to_excel_time)
-    print(df['Active time'])
-    print(df['Idle time'])
 
     # Write to a new Excel file
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -228,7 +223,6 @@ def convert_excel(file_path):
     sheet = workbook.active
 
     headers = [cell.value for cell in sheet[1]]
-    employee_col = headers.index("Employee") + 1
     date_col = headers.index("Date") + 1
     active_time_col = headers.index("Active time") + 1
     idle_time_col = headers.index("Idle time") + 1
